@@ -60,11 +60,11 @@ class DetailBodyWidget extends StatelessWidget {
     return ListView(
       children: <Widget>[
         // 2-2. Summary 화면 (movieResponse 데이터 추가)
-        DetailMovieSummaryWidget(),
+        const DetailMovieSummaryWidget(),
         // 2-3. Synopsis 화면 (movieResponse 데이터 추가)
-        DetailMovieSynopsisWidget(),
+        const DetailMovieSynopsisWidget(),
         // 2-4. Cast 화면 (movieResponse 데이터 추가)
-        DetailMovieCastWidget(),
+        const DetailMovieCastWidget(),
         // 2-5. (댓글 입력 창으로 이동을 위해 movieResponse 를 매개변수로 넘겨주기)
         DetailMovieCommentWidget(commentsResponse: commentsResponse),
       ],
@@ -132,8 +132,8 @@ class DetailMovieCastWidget extends StatelessWidget {
 
 class DetailMovieCommentWidget extends StatelessWidget {
   final CommentsResponse? commentsResponse;
-  // 2-5. Comment 화면 (댓글 입력 창으로 이동을 위해 movieResponse 를 매개변수로 받도록 하기)
 
+  // 2-5. Comment 화면 (댓글 입력 창으로 이동을 위해 movieResponse 를 매개변수로 받도록 하기)
 
   const DetailMovieCommentWidget({
     Key? key,
