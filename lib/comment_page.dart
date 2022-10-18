@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:padak_starter/model/widget/star_rating_bar.dart';
 
 class CommentPage extends StatefulWidget {
   final String movieTitle;
@@ -41,11 +42,45 @@ class CommentPageState extends State<CommentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('한줄평 작성'),
-          actions: const <Widget>[],
+      appBar: AppBar(
+        title: const Text('한줄평 작성'),
+        actions: <Widget>[
+          CommentSubmitButtonWidget(
+            ratingController: ratingController,
+            writerController: writerController,
+            contentsController: contentsController,
+          ),
+        ],
+      ),
+      body: WillPopScope(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const CommentMovieTitleWidget(movieTitle: ''),
+                CommentUserRatingWidget(
+                  ratingController: ratingController,
+                ),
+                const _HorizontalDivider(),
+                const CommentHorizontalDividerWidget(),
+                CommentNicknameInputFormWidget(
+                  writerController: writerController,
+                ),
+                CommentCommentInputFormWidget(
+                  contentsController: contentsController,
+                ),
+              ],
+            ),
+          ),
         ),
-        body: const Center(child: Text("Comment Page")));
+        onWillPop: () {
+          Navigator.of(context).pop(false);
+          return Future.value(false);
+        },
+      ),
+    );
   }
 }
 
@@ -61,10 +96,25 @@ class CommentSubmitButtonWidget extends StatelessWidget {
     required this.contentsController,
   }) : super(key: key);
 
+  final sendIcon = const Icon(
+    Icons.send,
+    color: Colors.white,
+    size: 25,
+  );
+
   @override
   Widget build(BuildContext context) {
     // 3-2. 댓글 입력 화면 (CommentSubmitButtonWidget)
-    return const Center(child: Text("전송"));
+    return IconButton(
+      icon: sendIcon,
+      onPressed: () {
+        if (writerController.text.isEmpty || contentsController.text.isEmpty) {
+          _showSnackBar(context, '모든정보 입력');
+        } else {
+          Navigator.of(context).pop(true);
+        }
+      },
+    );
   }
 }
 
@@ -79,7 +129,16 @@ class CommentMovieTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 3-3. 댓글 입력 화면 (CommentMovieTitleWidget)
-    return const Text("영화 제목");
+    return Container(
+      padding: const EdgeInsets.all(10),
+      child: Text(
+        movieTitle,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 }
 
@@ -100,7 +159,20 @@ class _CommentUserRatingWidgetState extends State<CommentUserRatingWidget> {
   @override
   Widget build(BuildContext context) {
     // 3-4. 댓글 입력 화면 (CommentUserRatingWidget)
-    return const Text("유저가 별점을 설정할 수 있는 화면");
+    return Column(
+      children: <Widget>[
+        StarRatingBar(
+          onRatingChanged: (rating) {
+            setState(
+              () {
+                widget.ratingController.value = rating.toDouble();
+              },
+            );
+          },
+        ),
+        Text((widget.ratingController.value / 2.0).toString())
+      ],
+    );
   }
 }
 
@@ -132,7 +204,22 @@ class _CommentNicknameInputFormWidgetState
   @override
   Widget build(BuildContext context) {
     // 3-6. 댓글 입력 화면 (CommentNicknameInputFormWidget)
-    return const Text("닉네임 입력");
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: TextField(
+        onChanged: (text) => widget.writerController.text = text,
+        maxLines: 1,
+        maxLength: 20,
+        decoration: InputDecoration(
+          hintText: '닉네임을 입력해주세요',
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -154,7 +241,36 @@ class _CommentCommentInputFormWidgetState
   @override
   Widget build(BuildContext context) {
     // 3-7. 댓글 입력 화면 (CommentCommentInputFormWidget)
-    return const Text("한줄평 입력");
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: TextField(
+        onChanged: (text) => widget.contentsController.text = text,
+        maxLines: null,
+        maxLength: 100,
+        decoration: InputDecoration(
+          hintText: '한줄평을 작성해주세요',
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HorizontalDivider extends StatelessWidget {
+  const _HorizontalDivider();
+
+  @override
+  Widget build(BuildContext buildContext) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+      width: double.infinity,
+      height: 10,
+      color: Colors.grey.shade400,
+    );
   }
 }
 

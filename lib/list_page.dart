@@ -34,7 +34,7 @@ Widget _buildGradeImage(int grade) {
 
 Widget _buildListItem(BuildContext context, {required int index}) {
   return InkWell(
-    child: _buildItem(movies[index]),
+    child: _buildItem(movie: movies[index]),
     onTap: () {
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -46,49 +46,56 @@ Widget _buildListItem(BuildContext context, {required int index}) {
   );
 }
 
-Widget _buildItem(Movie movie) {
-  return Container(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Image.network(
-              movie.thumb,
-              height: 120,
-              width: 90,
-            ),
-            Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            movie.title,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+class _buildItem extends StatelessWidget {
+  final Movie movie;
+
+  const _buildItem({required this.movie, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext buildContext) {
+    return Container(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Image.network(
+                movie.thumb,
+                height: 120,
+                width: 90,
+              ),
+              Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              movie.title,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          _buildGradeImage(movie.grade),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(children: <Widget>[
-                        Text('평점 : ${movie.userRating}'),
-                        const SizedBox(width: 10),
-                        Text('예매순위 : ${movie.reservationGrade}'),
-                        const SizedBox(width: 10),
-                        Text('예매율 : ${movie.reservationRate}'),
-                      ]),
-                      const SizedBox(height: 10),
-                      Text('개봉일 : ${movie.date}'),
-                    ]))
-          ]));
+                            const SizedBox(width: 8),
+                            _buildGradeImage(movie.grade),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(children: <Widget>[
+                          Text('평점 : ${movie.userRating}'),
+                          const SizedBox(width: 10),
+                          Text('예매순위 : ${movie.reservationGrade}'),
+                          const SizedBox(width: 10),
+                          Text('예매율 : ${movie.reservationRate}'),
+                        ]),
+                        const SizedBox(height: 10),
+                        Text('개봉일 : ${movie.date}'),
+                      ]))
+            ]));
+  }
 }
 
 final List<Movie> movies = DummysRepository.loadDummyMovies();

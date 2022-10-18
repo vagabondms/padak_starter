@@ -44,15 +44,22 @@ class _MainPageState extends State<MainPage> {
               _selectedTabIndex = index;
             });
           }),
-      body: _buildPage(_selectedTabIndex),
+      body: _buildPage(index: _selectedTabIndex),
     );
   }
 }
 
-Widget _buildPage(index) {
-  if (index == 0) {
-    return ListPage();
-  } else {
-    return GridPage();
+class _buildPage extends StatelessWidget {
+  final int index;
+
+  const _buildPage({required this.index, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext buildContext) {
+    if (index == 0) {
+      return ListPage();
+    } else {
+      return GridPage();
+    }
   }
 }
