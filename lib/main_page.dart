@@ -42,7 +42,6 @@ class _MainPageState extends State<MainPage> {
           onTap: (index) {
             setState(() {
               _selectedTabIndex = index;
-              print('$_selectedTabIndex Tab clicked');
             });
           }),
       body: _buildPage(_selectedTabIndex),

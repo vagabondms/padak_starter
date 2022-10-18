@@ -42,9 +42,10 @@ class CommentPageState extends State<CommentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('한줄평 작성'),
+          title: const Text('한줄평 작성'),
+          actions: const <Widget>[],
         ),
-        body: Center(child: Text("Comment Page")));
+        body: const Center(child: Text("Comment Page")));
   }
 }
 
