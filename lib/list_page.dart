@@ -11,7 +11,7 @@ class ListPage extends StatelessWidget {
       separatorBuilder: (_, index) => const Divider(color: Colors.grey),
       itemCount: movies.length,
       itemBuilder: (context, index) {
-        return _buildListItem(context, index: index);
+        return ListWidget(index: index);
       },
     );
   }
@@ -32,24 +32,34 @@ Widget _buildGradeImage(int grade) {
   }
 }
 
-Widget _buildListItem(BuildContext context, {required int index}) {
-  return InkWell(
-    child: _buildItem(movie: movies[index]),
-    onTap: () {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) =>
-              DetailPage(movieId: movies[index].id, key: Key(movies[index].id)),
-        ),
-      );
-    },
-  );
+class ListWidget extends StatelessWidget {
+  final int index;
+
+  const ListWidget({
+    required this.index,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext buildContext) {
+    return InkWell(
+      child: ListItemWidget(movie: movies[index]),
+      onTap: () {
+        Navigator.of(buildContext).push(
+          MaterialPageRoute(
+            builder: (_) => DetailPage(
+                movieId: movies[index].id, key: Key(movies[index].id)),
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _buildItem extends StatelessWidget {
+class ListItemWidget extends StatelessWidget {
   final Movie movie;
 
-  const _buildItem({required this.movie, Key? key}) : super(key: key);
+  const ListItemWidget({required this.movie, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext buildContext) {
@@ -99,9 +109,3 @@ class _buildItem extends StatelessWidget {
 }
 
 final List<Movie> movies = DummysRepository.loadDummyMovies();
-
-// 1-3. 리스트 화면 (고정 더미 데이터)
-
-// 1-3. 리스트 화면 (동적 데이터 호출1)
-
-// 1-3. 리스트 화면 (관람 등급 이미지 버튼 함수 생성)

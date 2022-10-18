@@ -33,6 +33,7 @@ class _MainPageState extends State<MainPage> {
                   const PopupMenuItem(value: 2, child: Text("최신순")),
                 ])
       ]),
+      body: BuildPageWidget(index: _selectedTabIndex),
       bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.view_list), label: 'List'),
@@ -44,18 +45,18 @@ class _MainPageState extends State<MainPage> {
               _selectedTabIndex = index;
             });
           }),
-      body: _buildPage(index: _selectedTabIndex),
     );
   }
 }
 
-class _buildPage extends StatelessWidget {
+//Widget으로 만들 필요가 있나??
+class BuildPageWidget extends StatelessWidget {
   final int index;
 
-  const _buildPage({required this.index, Key? key}) : super(key: key);
+  const BuildPageWidget({required this.index, Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
     if (index == 0) {
       return ListPage();
     } else {

@@ -20,8 +20,8 @@ class DetailPage extends StatefulWidget {
 
 class _DetailState extends State<DetailPage> {
   String movieId = "";
-  MovieResponse? _movieResponse;
-  CommentsResponse? _commentsResponse;
+  MovieResponse? movieResponse;
+  CommentsResponse? commentsResponse;
 
   _DetailState();
 
@@ -33,12 +33,9 @@ class _DetailState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 2-1. 상세 화면 (테스트 데이터 설정 - 영화 상세)
     final movieResponse = DummysRepository.loadDummyMovie(movieId);
     final commentsResponse = DummysRepository.loadDummyComments(movieId);
-    // 2-5. 상세 화면 (테스트 데이터 설정 - 댓글 상세)
 
-    // 2-1. 상세 화면 (조건문에 따라 위젯 다르게 나오도록 하기) - 1
     return Scaffold(
         appBar: AppBar(
           // 2-1. 상세 화면 (제목 설정)
@@ -312,7 +309,7 @@ Widget buildDivider() {
 }
 
 class DetailMovieCommentWidget extends StatelessWidget {
-  final CommentsResponse commentsResponse;
+  final CommentsResponse? commentsResponse;
   final MovieResponse movieResponse;
 
   // 2-5. Comment 화면 (댓글 입력 창으로 이동을 위해 movieResponse 를 매개변수로 받도록 하기)
@@ -326,60 +323,68 @@ class DetailMovieCommentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 2-5. Comment 화면 (화면 구현)
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        buildDivider(),
-        Container(
-          margin: const EdgeInsets.only(left: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              const Text(
-                '한줄평',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: const Icon(Icons.create),
-                color: Colors.blue,
-                onPressed: () =>
-                    _presentCommentPage(context, movieResponse: movieResponse),
-              )
-            ],
+    if (commentsResponse != null && commentsResponse!.comments.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          buildDivider(),
+          Container(
+            margin: const EdgeInsets.only(left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const Text(
+                  '한줄평',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.create),
+                  color: Colors.blue,
+                  onPressed: () => _presentCommentPage(context,
+                      movieResponse: movieResponse),
+                )
+              ],
+            ),
           ),
-        ),
-        CommentListView(commentsResponse)
-      ],
-    );
+          DetailMovieCommentListWidget(commentsResponse: commentsResponse)
+        ],
+      );
+    } else {
+      return const SizedBox();
+    }
   }
 }
 
 // 2-5. Comment 화면 (한줄평 리스트)
-class CommentListView extends StatelessWidget {
-  final CommentsResponse commentsResponse;
+class DetailMovieCommentListWidget extends StatelessWidget {
+  final CommentsResponse? commentsResponse;
 
-  const CommentListView(
-    this.commentsResponse, {
+  const DetailMovieCommentListWidget({
     Key? key,
+    this.commentsResponse,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      primary: false,
-      padding: const EdgeInsets.all(10),
-      itemCount: commentsResponse.comments.length,
-      itemBuilder: (_, index) => CommentItem(commentsResponse.comments[index]),
-    );
+    if (commentsResponse != null && commentsResponse!.comments.isNotEmpty) {
+      return ListView.builder(
+        shrinkWrap: true,
+        primary: false,
+        padding: const EdgeInsets.all(10),
+        itemCount: commentsResponse!.comments.length,
+        itemBuilder: (_, index) =>
+            DetailMovieCommentItemWidget(commentsResponse!.comments[index]),
+      );
+    } else {
+      return const SizedBox();
+    }
   }
 }
 
-class CommentItem extends StatelessWidget {
+class DetailMovieCommentItemWidget extends StatelessWidget {
   final Comment comment;
 
-  const CommentItem(
+  const DetailMovieCommentItemWidget(
     this.comment, {
     Key? key,
   }) : super(key: key);
@@ -414,9 +419,6 @@ class CommentItem extends StatelessWidget {
         ));
   }
 }
-// 2-5. Comment 화면 (한줄평 아이템 화면 구축)
-
-// 2-5. Comment 화면 (포맷에 맞춰 날짜 데이터 반환)
 
 String _convertTimeStampToDateTime(int timeStamp) {
   final dateFormatter = DateFormat('yyyy-MM-dd HH:mm:ss');
@@ -427,7 +429,6 @@ String _convertTimeStampToDateTime(int timeStamp) {
   );
 }
 
-// 2-5. Comment 화면 (댓글 입력 창으로 이동)
 void _presentCommentPage(
   BuildContext context, {
   required MovieResponse movieResponse,

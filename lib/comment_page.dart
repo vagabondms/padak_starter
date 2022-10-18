@@ -63,7 +63,6 @@ class CommentPageState extends State<CommentPage> {
                 CommentUserRatingWidget(
                   ratingController: ratingController,
                 ),
-                const _HorizontalDivider(),
                 const CommentHorizontalDividerWidget(),
                 CommentNicknameInputFormWidget(
                   writerController: writerController,
@@ -181,8 +180,12 @@ class CommentHorizontalDividerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 3-5. 댓글 입력 화면 (CommentHorizontalDividerWidget)
-    return const Text("회색 구분선 화면");
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+      width: double.infinity,
+      height: 10,
+      color: Colors.grey.shade400,
+    );
   }
 }
 
@@ -256,20 +259,6 @@ class _CommentCommentInputFormWidgetState
           ),
         ),
       ),
-    );
-  }
-}
-
-class _HorizontalDivider extends StatelessWidget {
-  const _HorizontalDivider();
-
-  @override
-  Widget build(BuildContext buildContext) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
-      width: double.infinity,
-      height: 10,
-      color: Colors.grey.shade400,
     );
   }
 }
