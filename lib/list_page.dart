@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'detail_page.dart';
+import 'model/response/movies_response.dart';
+import 'model/data/dummys_repository.dart';
+
 class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       separatorBuilder: (_, index) => const Divider(color: Colors.grey),
-      itemCount: 8,
+      itemCount: movies.length,
       itemBuilder: (context, index) {
-        print(index);
-        return _buildDummyItem(
-            img:
-                'https://upload.wikimedia.org/wikipedia/ko/b/bc/%EB%B0%B1%EB%91%90%EC%82%B0_%EC%98%81%ED%99%94_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg',
-            title: '신과함께',
-            grade: 12,
-            rating: 11,
-            ticketRank: 11,
-            ticketRatio: 11.3,
-            openDate: DateTime.now());
+        return _buildListItem(context, index: index);
       },
     );
   }
@@ -37,14 +32,21 @@ Widget _buildGradeImage(int grade) {
   }
 }
 
-Widget _buildDummyItem(
-    {required String img,
-    required String title,
-    required int grade,
-    required int rating,
-    required int ticketRank,
-    required double ticketRatio,
-    required DateTime openDate}) {
+Widget _buildListItem(BuildContext context, {required int index}) {
+  return InkWell(
+    child: _buildItem(movies[index]),
+    onTap: () {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) =>
+              DetailPage(movieId: movies[index].id, key: Key(movies[index].id)),
+        ),
+      );
+    },
+  );
+}
+
+Widget _buildItem(Movie movie) {
   return Container(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -52,7 +54,7 @@ Widget _buildDummyItem(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Image.network(
-              img,
+              movie.thumb,
               height: 120,
               width: 90,
             ),
@@ -65,31 +67,31 @@ Widget _buildDummyItem(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            title,
+                            movie.title,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(width: 8),
-                          _buildGradeImage(grade),
+                          _buildGradeImage(movie.grade),
                         ],
                       ),
                       const SizedBox(height: 10),
                       Row(children: <Widget>[
-                        Text('평점 : $rating'),
+                        Text('평점 : ${movie.userRating}'),
                         const SizedBox(width: 10),
-                        Text('예매순위 : $ticketRank'),
+                        Text('예매순위 : ${movie.reservationGrade}'),
                         const SizedBox(width: 10),
-                        Text('예매율 : $ticketRatio'),
+                        Text('예매율 : ${movie.reservationRate}'),
                       ]),
                       const SizedBox(height: 10),
-                      Text('개봉일 : $openDate'),
+                      Text('개봉일 : ${movie.date}'),
                     ]))
           ]));
 }
 
-
+final List<Movie> movies = DummysRepository.loadDummyMovies();
 
 // 1-3. 리스트 화면 (고정 더미 데이터)
 
